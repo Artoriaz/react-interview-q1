@@ -5,7 +5,6 @@ import {getLocations, isNameValid} from './mock-api/apis';
 function App() {
   const [nameValid, setNameValid] = useState(true);
   const [locations, setLocations] = useState([]);  
-  const [name, setName] = useState('');
   const [location, setLocation] = useState('');
 
   const checkName = useCallback(async event => {
@@ -44,7 +43,7 @@ function App() {
         <label htmlFor="name">Name</label>
         <input
           id="name"
-          value={name}
+          value={nameValid}
           onChange={checkName}
           type="text"
           placeholder="Enter name"
