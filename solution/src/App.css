@@ -1,7 +1,7 @@
 form {
   display: flex;
   flex-direction: column;
-  max-width: 300px;
+  max-width: 500px;
 }
 
 label {
@@ -18,7 +18,7 @@ button {
 }
 
 /* Responsive design */
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
   form {
     width: 100%;
   }

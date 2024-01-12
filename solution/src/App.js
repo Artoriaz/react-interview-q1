@@ -6,10 +6,14 @@ function App() {
   const [nameValid, setNameValid] = useState(true);
   const [locations, setLocations] = useState([]);  
   const [location, setLocation] = useState('');
+  const [name, setName] = useState('');
 
+  // utilize these APIs as a custom hook later.
   const checkName = useCallback(async event => {
+    setName(event.target.value)
     const nameTaken = await isNameValid(event.target.value);
     setNameValid(nameTaken);
+    
   }, [setNameValid]);
   
   const getLocationsCallback = useCallback(async () => {
@@ -28,12 +32,12 @@ function App() {
     e.preventDefault();
     if (nameValid) {
       // Do something with the valid form data
-      console.log('Form submitted with:', { name, location });
+      console.log('Form submitted with:', {name, nameValid , location });
     }
   };
   const handleClear = () => {
-    setName('');
     setLocation('');
+    setName('')
     setNameValid(true);
   };
 
@@ -43,7 +47,7 @@ function App() {
         <label htmlFor="name">Name</label>
         <input
           id="name"
-          value={nameValid}
+          value={name}
           onChange={checkName}
           type="text"
           placeholder="Enter name"
@@ -64,7 +68,7 @@ function App() {
       <button type="button" onClick={handleClear}>
         Clear
       </button>
-      <button type="submit" disabled={!nameValid || !name || !location}>
+      <button type="submit" disabled={!nameValid | !name | !location}>
         Add
       </button>
     </form>
@@ -72,3 +76,56 @@ function App() {
 
 }
 export default App;
+
+//import * as React from 'react';
+
+// const LoginForm = () => {
+//   const [form, setForm] = React.useState({
+//     email: '',
+//     password: '',
+//   });
+
+//   const handleChange = (event) => {
+//     setForm({
+//       ...form,
+//       [event.target.id]: event.target.value,
+//     });
+//   };
+
+//   const handleSubmit = (event) => {
+//     event.preventDefault();
+
+//     alert(form.email + ' ' + form.password);
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       <div>
+//         <label htmlFor="email">Email</label>
+//         <input
+//           id="email"
+//           type="text"
+//           value={form.email}
+//           onChange={handleChange}
+//         />
+//       </div>
+//       <div>
+//         <label htmlFor="password">Password</label>
+//         <input
+//           id="password"
+//           type="password"
+//           value={form.password}
+//           onChange={handleChange}
+//         />
+//       </div>
+//       <button type="submit">Submit</button>
+//     </form>
+//   );
+// };
+// const INITIAL_STATE = {
+//   email: '',
+//   password: '',
+// };
+
+// const LoginForm = ({ onLogin }) => {
+//   const [form, setForm] = React.useState(INITIAL_STATE);
