@@ -1,21 +1,58 @@
-import './App.css';
-import {useCallback, useEffect, useState} from 'react';
-import {getLocations, isNameValid} from './mock-api/apis';
+import "./App.css";
+import { useCallback, useEffect, useState } from "react";
+import { getLocations, isNameValid } from "./mock-api/apis";
 
+const INITIAL_STATE = {
+  location: "",
+  name: "",
+};
+// const VALIDATION = {
+//   location: [
+//     {
+//       isValid: (value) => !!value,
+//       message: 'Is required.',
+//     },
+//     {
+//       isValid: (value) => /\S+@\S+\.\S+/.test(value),
+//       message: 'Needs to be an email.',
+//     },
+//   ],
+//   name: [
+//     {
+//       isValid: (value) => !!value,
+//       message: 'Is required.',
+//     },
+//   ],
+// };
+const getDirtyFields = (form) =>
+  Object.keys(form).reduce((form, key) => {
+    const isDirty = form[key] !== INITIAL_STATE[key];
+
+    return { ...form, [key]: isDirty };
+  }, {});
 function App() {
   const [nameValid, setNameValid] = useState(true);
-  const [locations, setLocations] = useState([]);  
-  const [location, setLocation] = useState('');
-  const [name, setName] = useState('');
+  const [locations, setLocations] = useState([]);
+
+  const [form, setForm] = useState(INITIAL_STATE);
+  const handleFormChange = async (event) => {
+    await setForm({
+      ...form,
+      [event.target.id]: event.target.value,
+    });
+    console.log(form);
+  };
 
   // utilize these APIs as a custom hook later.
-  const checkName = useCallback(async event => {
-    setName(event.target.value)
-    const nameTaken = await isNameValid(event.target.value);
-    setNameValid(nameTaken);
-    
-  }, [setNameValid]);
-  
+  const checkName = useCallback(
+    async (event) => {
+      handleFormChange(event);
+      const nameTaken = await isNameValid(event.target.value);
+      setNameValid(nameTaken);
+    },
+    [setNameValid]
+  );
+
   const getLocationsCallback = useCallback(async () => {
     const locations = await getLocations();
     setLocations(locations);
@@ -23,32 +60,32 @@ function App() {
 
   useEffect(() => {
     getLocationsCallback();
-  }, [])
-  const handleLocationChange = (e) => {
-    setLocation(e.target.value);
-  };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (nameValid) {
       // Do something with the valid form data
-      console.log('Form submitted with:', {name, nameValid , location });
+      // context provider right here.
+      console.log("Form Data:", form);
     }
+    handleClear();
   };
   const handleClear = () => {
-    setLocation('');
-    setName('')
+    setForm(INITIAL_STATE);
     setNameValid(true);
   };
 
+  const dirtyFields = getDirtyFields(form);
+  const hasChanges = Object.values(dirtyFields).every((isDirty) => !isDirty);
   return (
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="name">Name</label>
         <input
           id="name"
-          value={name}
-          onChange={checkName}
+          value={form.name}
+          onChange={(e) => checkName(e)}
           type="text"
           placeholder="Enter name"
         />
@@ -56,7 +93,11 @@ function App() {
       </div>
       <div>
         <label htmlFor="location">Location</label>
-        <select id="location" value={location} onChange={handleLocationChange}>
+        <select
+          id="location"
+          value={form.location}
+          onChange={(e) => handleFormChange(e)}
+        >
           <option value="">Select location</option>
           {locations.map((loc) => (
             <option key={loc} value={loc}>
@@ -68,64 +109,10 @@ function App() {
       <button type="button" onClick={handleClear}>
         Clear
       </button>
-      <button type="submit" disabled={!nameValid | !name | !location}>
+      <button type="submit" disabled={hasChanges}>
         Add
       </button>
     </form>
   );
-
 }
 export default App;
-
-//import * as React from 'react';
-
-// const LoginForm = () => {
-//   const [form, setForm] = React.useState({
-//     email: '',
-//     password: '',
-//   });
-
-//   const handleChange = (event) => {
-//     setForm({
-//       ...form,
-//       [event.target.id]: event.target.value,
-//     });
-//   };
-
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-
-//     alert(form.email + ' ' + form.password);
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <div>
-//         <label htmlFor="email">Email</label>
-//         <input
-//           id="email"
-//           type="text"
-//           value={form.email}
-//           onChange={handleChange}
-//         />
-//       </div>
-//       <div>
-//         <label htmlFor="password">Password</label>
-//         <input
-//           id="password"
-//           type="password"
-//           value={form.password}
-//           onChange={handleChange}
-//         />
-//       </div>
-//       <button type="submit">Submit</button>
-//     </form>
-//   );
-// };
-// const INITIAL_STATE = {
-//   email: '',
-//   password: '',
-// };
-
-// const LoginForm = ({ onLogin }) => {
-//   const [form, setForm] = React.useState(INITIAL_STATE);
