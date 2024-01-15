@@ -1,56 +1,74 @@
 import "./App.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { getLocations, isNameValid } from "./mock-api/apis";
-
+// design change potentially. For dirty or validation.
 const INITIAL_STATE = {
   location: "",
   name: "",
 };
-// const VALIDATION = {
-//   location: [
-//     {
-//       isValid: (value) => !!value,
-//       message: 'Is required.',
-//     },
-//     {
-//       isValid: (value) => /\S+@\S+\.\S+/.test(value),
-//       message: 'Needs to be an email.',
-//     },
-//   ],
-//   name: [
-//     {
-//       isValid: (value) => !!value,
-//       message: 'Is required.',
-//     },
-//   ],
-// };
+const VALIDATION = {
+  location: [
+    {
+      isValid: (value) => !!value,
+      message: "Is required.",
+    },
+  ],
+  name: [
+    {
+      //change this regex to something.
+      isValid: (value) => /\S+@\S+\.\S+/.test(value),
+      message: "Improper Value",
+    },
+  ],
+};
+const getErrorFields = (form, dirtyFields) =>
+  Object.keys(form).reduce((acc, key) => {
+    if (!VALIDATION[key] || dirtyFields[key] === false) return acc;
+
+    const errorsPerField = VALIDATION[key]
+      // get a list of potential errors for each field
+      // by running through all the checks
+      .map((validation) => ({
+        isValid: validation.isValid(form[key]),
+        message: validation.message,
+      }))
+      // only keep the errors
+      .filter((errorPerField) => !errorPerField.isValid);
+
+    return { ...acc, [key]: errorsPerField };
+  }, {});
 const getDirtyFields = (form) =>
-  Object.keys(form).reduce((form, key) => {
+  Object.keys(form).reduce((acc, key) => {
+    // check all form fields that have changed
     const isDirty = form[key] !== INITIAL_STATE[key];
 
-    return { ...form, [key]: isDirty };
+    return { ...acc, [key]: isDirty };
   }, {});
 function App() {
+  //create a store of names so we can check against that?  () => after we re-structure the componentss
   const [nameValid, setNameValid] = useState(true);
   const [locations, setLocations] = useState([]);
-
   const [form, setForm] = useState(INITIAL_STATE);
-  const handleFormChange = async (event) => {
-    await setForm({
-      ...form,
-      [event.target.id]: event.target.value,
-    });
-    console.log(form);
-  };
+  // make abstraction later.
+  const handleFormChange = useCallback(
+    (event) => {
+      setForm({
+        ...form,
+        [event.target.id]: event.target.value,
+      });
+    },
+    [form]
+  );
 
-  // utilize these APIs as a custom hook later.
+  //utilize these APIs as a custom hook later.
+  //should change this later since useCallback wouldnt be effective since handleFormChange would be the same every time?
   const checkName = useCallback(
     async (event) => {
       handleFormChange(event);
       const nameTaken = await isNameValid(event.target.value);
       setNameValid(nameTaken);
     },
-    [setNameValid]
+    [setNameValid, handleFormChange]
   );
 
   const getLocationsCallback = useCallback(async () => {
@@ -64,6 +82,8 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const hasErrors = Object.values(errorFields).flat().length > 0;
+    if (hasErrors) return;
     if (nameValid) {
       // Do something with the valid form data
       // context provider right here.
@@ -77,7 +97,10 @@ function App() {
   };
 
   const dirtyFields = getDirtyFields(form);
-  const hasChanges = Object.values(dirtyFields).every((isDirty) => !isDirty);
+  console.log(dirtyFields, "dirtyFields");
+  const hasChanges = Object.values(dirtyFields).includes(false);
+  const errorFields = getErrorFields(form, dirtyFields);
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -89,7 +112,12 @@ function App() {
           type="text"
           placeholder="Enter name"
         />
-        {!nameValid && <p>This name has already been taken</p>}
+        {!nameValid && (
+          <span style={{ color: "red" }}>Name is already taken.</span>
+        )}
+        {errorFields.name?.length ? (
+          <span style={{ color: "red" }}>{errorFields.name[0].message}</span>
+        ) : null}
       </div>
       <div>
         <label htmlFor="location">Location</label>
@@ -105,6 +133,11 @@ function App() {
             </option>
           ))}
         </select>
+        {errorFields.location?.length ? (
+          <span style={{ color: "red" }}>
+            {errorFields.location[0].message}
+          </span>
+        ) : null}
       </div>
       <button type="button" onClick={handleClear}>
         Clear
