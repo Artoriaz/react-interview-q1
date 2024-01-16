@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import LocationTable from "./components/LocationTable";
 import LocationSelect from "./components/LocationSelect";
 // design change potentially. For dirty or validation.
@@ -6,12 +6,11 @@ function App() {
   const [locationStore, setLocationStore] = useState([
     {
       location: "USA",
-      name: "Nate",
+      name: "Nathan Tarongoy",
     },
   ]);
   return (
     <div>
-      {/* refactor further later to have better callbacks*/}
       <LocationSelect locationStoreCallback={setLocationStore} />
       <LocationTable locationData={locationStore} />
     </div>
