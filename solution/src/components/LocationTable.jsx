@@ -10,14 +10,9 @@ import Paper from "@mui/material/Paper";
 const createData = (name, location) => {
   return { name, location };
 };
-//mock data
-const rows = [
-  createData("Nate", "Puerto Rico"),
-  createData("Jane", "Japan"),
-  createData("Nick", "Italy"),
-];
 
-const LocationTable = () => {
+const LocationTable = ({ locationData }) => {
+  console.log("LOCATIONDATA", locationData);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -28,7 +23,7 @@ const LocationTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {locationData.map((row) => (
             <TableRow
               key={row.name}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

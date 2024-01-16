@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { getLocations, isNameValid } from "../mock-api/apis";
+import "../App.css";
 const INITIAL_STATE = {
   location: "",
   name: "",
@@ -42,7 +43,7 @@ const getDirtyFields = (form) =>
 
     return { ...acc, [key]: isDirty };
   }, {});
-const LocationSelect = () => {
+const LocationSelect = ({ locationStore, locationStoreCallback }) => {
   //create a store of names so we can check against that?  () => after we re-structure the componentss
   const [nameValid, setNameValid] = useState(true);
   const [locations, setLocations] = useState([]);
@@ -83,9 +84,7 @@ const LocationSelect = () => {
     const hasErrors = Object.values(errorFields).flat().length > 0;
     if (hasErrors) return;
     if (nameValid) {
-      // Do something with the valid form data
-      // context provider right here.
-      console.log("Form Data:", form);
+      locationStoreCallback((prevState) => [...prevState, form]);
     }
     handleClear();
   };
