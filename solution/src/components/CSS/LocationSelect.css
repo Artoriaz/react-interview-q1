@@ -1,0 +1,72 @@
+.container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+}
+
+/* Form styles */
+.form {
+  align-items: center;
+  width: 50%; /* Adjust width as needed */
+  max-width: 400px; /* Maximum width of the form */
+  margin: auto; /* Auto margins for any additional centering */
+  margin-bottom: 20px;
+  padding: 20px; /* Padding around the form */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds shadow for better visibility */
+}
+.labelAligner {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+  margin-top: 10px
+
+}
+.form label {
+  margin-top: 10px;
+  margin-right: 20px;
+  font-weight: bold;
+}
+/* Style the input fields */
+.form input[type="text"] {
+  width: 300px;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #000;
+  box-sizing: border-box;
+}
+.form input span {
+  color: red; /* Error message color */
+  font-size: 0.8rem; /* Smaller font size for error message */
+  height: 1.2rem; /* Fixed height for layout consistency */
+  line-height: 1.2rem;
+}
+/*make disabled version and button group for the right*/
+.form button {
+  padding: 8px 15px;
+  margin-top: 20px;
+  margin-right: 10px;
+  border: none;
+  background-color: #000;
+  color: white;
+  cursor: pointer;
+}
+.form button:disabled {
+  color: gray;
+  background-color:whitesmoke;
+}
+.form button:disabled:hover{
+  cursor: not-allowed !important;
+  color: gray;
+  background-color:whitesmoke;
+}
+.form button:hover {
+  background-color: #555;
+}
+.form select {
+  width: 300px;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #000;
+  box-sizing: border-box;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}

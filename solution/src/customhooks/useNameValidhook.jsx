@@ -5,12 +5,13 @@ import { isNameValid } from "../mock-api/apis";
 const useNameValidHook = (name) => {
   const [nameValid, setNameValid] = useState(true);
   useEffect(() => {
-    const nameChecker = async () => {
-      const nameValidData = await isNameValid(name);
-      setNameValid(nameValidData);
-    };
     nameChecker();
   }, [name]);
+  const nameChecker = async () => {
+    const nameValidData = await isNameValid(name);
+    setNameValid(nameValidData);
+  };
+  console.log('name', name)
   return { nameValid };
 };
 

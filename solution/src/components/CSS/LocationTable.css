@@ -1,0 +1,10 @@
+.formattedTable {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+}
+.centeredTable {
+  align-items: center;
+  width: 50%; /* Adjust width as needed */
+  max-width: 400px; /* Maximum width of the form */
+  margin: auto; /* Auto margins for any additional centering */
+}
