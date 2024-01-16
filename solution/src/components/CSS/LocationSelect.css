@@ -33,7 +33,7 @@
   border: 1px solid #000;
   box-sizing: border-box;
 }
-.form input span {
+.errorHandling{
   color: red; /* Error message color */
   font-size: 0.8rem; /* Smaller font size for error message */
   height: 1.2rem; /* Fixed height for layout consistency */
@@ -61,12 +61,12 @@
 .form button:hover {
   background-color: #555;
 }
-.form select {
+.locationSelector {
   width: 300px;
   padding: 8px;
   margin-top: 5px;
   border: 1px solid #000;
   box-sizing: border-box;
   -moz-appearance: none;
-  -webkit-appearance: none;
 }
+

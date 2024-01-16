@@ -95,10 +95,10 @@ const LocationSelect = ({ locationStoreCallback }) => {
         />
        <div> 
          {!nameValid && (
-          <span style={{ color: "red"}}>Name is already taken.</span>
+          <span className="errorHandling" >Name is already taken.</span>
         )}
         {errorFields.name?.length ? (
-          <span style={{ color: "red"}}>{errorFields.name[0].message}</span>
+          <span className="errorHandling">{errorFields.name[0].message}</span>
         ) : <span/>}
         </div>
        </div>
@@ -110,6 +110,7 @@ const LocationSelect = ({ locationStoreCallback }) => {
         <label htmlFor="location">Location</label>
         <select
           id="location"
+          className="locationSelector"
           value={form.location}
           onChange={(e) => handleFormChange(e)}
         >
