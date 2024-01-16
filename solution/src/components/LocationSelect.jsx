@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { getLocations, isNameValid } from "../mock-api/apis";
 import "../App.css";
+import getErrorFields from "./helperFunctions/errorFields";
 const INITIAL_STATE = {
   location: "",
   name: "",
@@ -15,27 +16,11 @@ const VALIDATION = {
   name: [
     {
       //change this regex to something.
-      isValid: (value) => /\S+@\S+\.\S+/.test(value),
-      message: "Improper Value",
+      isValid: (value) => /^\s*\S.*$/.test(value),
+      message: "Value needs to a name",
     },
   ],
 };
-const getErrorFields = (form, dirtyFields) =>
-  Object.keys(form).reduce((acc, key) => {
-    if (!VALIDATION[key] || dirtyFields[key] === false) return acc;
-
-    const errorsPerField = VALIDATION[key]
-      // get a list of potential errors for each field
-      // by running through all the checks
-      .map((validation) => ({
-        isValid: validation.isValid(form[key]),
-        message: validation.message,
-      }))
-      // only keep the errors
-      .filter((errorPerField) => !errorPerField.isValid);
-
-    return { ...acc, [key]: errorsPerField };
-  }, {});
 const getDirtyFields = (form) =>
   Object.keys(form).reduce((acc, key) => {
     // check all form fields that have changed
@@ -43,8 +28,7 @@ const getDirtyFields = (form) =>
 
     return { ...acc, [key]: isDirty };
   }, {});
-const LocationSelect = ({ locationStore, locationStoreCallback }) => {
-  //create a store of names so we can check against that?  () => after we re-structure the componentss
+const LocationSelect = ({ locationStoreCallback }) => {
   const [nameValid, setNameValid] = useState(true);
   const [locations, setLocations] = useState([]);
   const [form, setForm] = useState(INITIAL_STATE);
@@ -94,9 +78,14 @@ const LocationSelect = ({ locationStore, locationStoreCallback }) => {
   };
 
   const dirtyFields = getDirtyFields(form);
-  console.log(dirtyFields, "dirtyFields");
   const hasChanges = Object.values(dirtyFields).includes(false);
-  const errorFields = getErrorFields(form, dirtyFields);
+  //could simplify later.
+  const errorFields = getErrorFields(form, dirtyFields, VALIDATION);
+  console.log(
+    Object.values(errorFields).every((field) => field.length === 0),
+    "error fields parsed"
+  );
+  console.log(errorFields, "error fields");
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -138,7 +127,14 @@ const LocationSelect = ({ locationStore, locationStoreCallback }) => {
       <button type="button" onClick={handleClear}>
         Clear
       </button>
-      <button type="submit" disabled={hasChanges}>
+      <button
+        type="submit"
+        disabled={
+          hasChanges ||
+          !Object.values(errorFields).every((field) => !field.length) ||
+          !nameValid
+        }
+      >
         Add
       </button>
     </form>
