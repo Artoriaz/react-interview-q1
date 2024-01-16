@@ -1,6 +1,7 @@
 import "./App.css";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { getLocations, isNameValid } from "./mock-api/apis";
+import LocationTable from "./components/LocationTable";
 // design change potentially. For dirty or validation.
 const INITIAL_STATE = {
   location: "",
@@ -102,50 +103,53 @@ function App() {
   const errorFields = getErrorFields(form, dirtyFields);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name</label>
-        <input
-          id="name"
-          value={form.name}
-          onChange={(e) => checkName(e)}
-          type="text"
-          placeholder="Enter name"
-        />
-        {!nameValid && (
-          <span style={{ color: "red" }}>Name is already taken.</span>
-        )}
-        {errorFields.name?.length ? (
-          <span style={{ color: "red" }}>{errorFields.name[0].message}</span>
-        ) : null}
-      </div>
-      <div>
-        <label htmlFor="location">Location</label>
-        <select
-          id="location"
-          value={form.location}
-          onChange={(e) => handleFormChange(e)}
-        >
-          <option value="">Select location</option>
-          {locations.map((loc) => (
-            <option key={loc} value={loc}>
-              {loc}
-            </option>
-          ))}
-        </select>
-        {errorFields.location?.length ? (
-          <span style={{ color: "red" }}>
-            {errorFields.location[0].message}
-          </span>
-        ) : null}
-      </div>
-      <button type="button" onClick={handleClear}>
-        Clear
-      </button>
-      <button type="submit" disabled={hasChanges}>
-        Add
-      </button>
-    </form>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name</label>
+          <input
+            id="name"
+            value={form.name}
+            onChange={(e) => checkName(e)}
+            type="text"
+            placeholder="Enter name"
+          />
+          {!nameValid && (
+            <span style={{ color: "red" }}>Name is already taken.</span>
+          )}
+          {errorFields.name?.length ? (
+            <span style={{ color: "red" }}>{errorFields.name[0].message}</span>
+          ) : null}
+        </div>
+        <div>
+          <label htmlFor="location">Location</label>
+          <select
+            id="location"
+            value={form.location}
+            onChange={(e) => handleFormChange(e)}
+          >
+            <option value="">Select location</option>
+            {locations.map((loc) => (
+              <option key={loc} value={loc}>
+                {loc}
+              </option>
+            ))}
+          </select>
+          {errorFields.location?.length ? (
+            <span style={{ color: "red" }}>
+              {errorFields.location[0].message}
+            </span>
+          ) : null}
+        </div>
+        <button type="button" onClick={handleClear}>
+          Clear
+        </button>
+        <button type="submit" disabled={hasChanges}>
+          Add
+        </button>
+      </form>
+      <LocationTable />
+    </div>
   );
 }
 export default App;
