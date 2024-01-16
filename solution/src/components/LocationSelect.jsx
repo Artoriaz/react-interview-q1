@@ -2,6 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { getLocations, isNameValid } from "../mock-api/apis";
 import "../App.css";
 import getErrorFields from "./helperFunctions/errorFields";
+import getDirtyFields from "./helperFunctions/dirtyFields";
+
+//could move INITIAL STATE and VALIDATION to their own folders for each individual component.
+//Kept them here for demonstrative purposes
 const INITIAL_STATE = {
   location: "",
   name: "",
@@ -15,24 +19,17 @@ const VALIDATION = {
   ],
   name: [
     {
-      //change this regex to something.
       isValid: (value) => /^\s*\S.*$/.test(value),
       message: "Value needs to a name",
     },
   ],
 };
-const getDirtyFields = (form) =>
-  Object.keys(form).reduce((acc, key) => {
-    // check all form fields that have changed
-    const isDirty = form[key] !== INITIAL_STATE[key];
-
-    return { ...acc, [key]: isDirty };
-  }, {});
 const LocationSelect = ({ locationStoreCallback }) => {
   const [nameValid, setNameValid] = useState(true);
   const [locations, setLocations] = useState([]);
   const [form, setForm] = useState(INITIAL_STATE);
-  // make abstraction later.
+
+  //use callback reasoning
   const handleFormChange = useCallback(
     (event) => {
       setForm({
@@ -44,7 +41,6 @@ const LocationSelect = ({ locationStoreCallback }) => {
   );
 
   //utilize these APIs as a custom hook later.
-  //should change this later since useCallback wouldnt be effective since handleFormChange would be the same every time?
   const checkName = useCallback(
     async (event) => {
       handleFormChange(event);
@@ -77,7 +73,7 @@ const LocationSelect = ({ locationStoreCallback }) => {
     setNameValid(true);
   };
 
-  const dirtyFields = getDirtyFields(form);
+  const dirtyFields = getDirtyFields(form, INITIAL_STATE);
   const hasChanges = Object.values(dirtyFields).includes(false);
   //could simplify later.
   const errorFields = getErrorFields(form, dirtyFields, VALIDATION);
