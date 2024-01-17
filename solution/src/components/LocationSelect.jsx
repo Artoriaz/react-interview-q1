@@ -1,15 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
 import "./CSS/LocationSelect.css";
 import getErrorFields from "./helperFunctions/errorFields";
 import getDirtyFields from "./helperFunctions/dirtyFields";
 import useNameValidHook from '../customhooks/useNameValidhook';
-import getLocationsHook from '../customhooks/getLocationsHook';
 //could move INITIAL STATE and VALIDATION to their own folders for each individual component.
 //Kept them here for demonstrative purposes
 const INITIAL_STATE = {
   location: "",
   name: "",
 };
+//further could do validation on a hook level. Reason to why i didnt as I had not thought of it at the time,
 const VALIDATION = {
   location: [
     {
@@ -25,42 +24,8 @@ const VALIDATION = {
   ],
 };
 
-const LocationSelect = ({ locationStoreCallback }) => {
-  //const [nameValid, setNameValid] = useState(true);
-  //const [locations, setLocations] = useState([]);
-  const [form, setForm] = useState(INITIAL_STATE);
-  const {nameValid} = useNameValidHook(form.name);
-  const {locations} = getLocationsHook();
-  //use callback reasoning
-  const handleFormChange = useCallback(
-    (event) => {
-      setForm({
-        ...form,
-        [event.target.id]: event.target.value,
-      });
-    },
-    [form]
-  );
-
-  //utilize these APIs as a custom hook later.
-  const checkName = useCallback(
-    async (event) => {
-      handleFormChange(event);
-      //const nameTaken = await isNameValid(event.target.value);
-      //setNameValid(nameValidTest);
-    },
-    [handleFormChange]
-  );
-
-  // const getLocationsCallback = useCallback(async () => {
-  //   const locations = await getLocations();
-  //   setLocations(locations);
-  // }, [setLocations]);
-
-  // useEffect(() => {
-  //   getLocationsCallback();
-  // }, []);
-
+const LocationSelect = ({ locationStoreCallback, locations}) => {
+  const {form ,nameValid, handleFormChange, handleClear} = useNameValidHook(INITIAL_STATE)
   const handleSubmit = (e) => {
     e.preventDefault();
     const hasErrors = Object.values(errorFields).flat().length > 0;
@@ -70,14 +35,11 @@ const LocationSelect = ({ locationStoreCallback }) => {
     }
     handleClear();
   };
-  const handleClear = () => {
-    setForm(INITIAL_STATE);
-    //setNameValid(true);
-  };
 
   const dirtyFields = getDirtyFields(form, INITIAL_STATE);
   const hasChanges = Object.values(dirtyFields).includes(false);
-  //could simplify later.
+  //could simplify later. Thinking of combing dirtyFields and validation into a master validator. 
+  //idea came in after , way past the designing and planning.
   const errorFields = getErrorFields(form, dirtyFields, VALIDATION);
 
   return (
@@ -89,7 +51,7 @@ const LocationSelect = ({ locationStoreCallback }) => {
        <input
           id="name"
           value={form.name}
-          onChange={(e) => checkName(e)}
+          onChange={(e) => handleFormChange(e)}
           type="text"
           placeholder="Enter name"
         />
@@ -121,7 +83,7 @@ const LocationSelect = ({ locationStoreCallback }) => {
             </option>
           ))}
         </select>
-        {/* use case is null here*/}
+        {/* use case is null here due but kept for demonstration purposes */}
         {/* {errorFields.location?.length ? (
           <span style={{ color: "red" }}>
             {errorFields.location[0].message}

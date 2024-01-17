@@ -8,10 +8,12 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import './CSS/LocationTable.css';
 
+//using material ui, was initially going to use it overall but used it to jot something down, but ended up keeping 
+// it.
 const LocationTable = ({ locationData }) => {
   return (
     <TableContainer class="formattedTable" component={Paper}>
-      <Table class="centeredTable" sx={{ minWidth: 500 }} aria-label="simple table">
+      <Table className="centeredTable" aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
