@@ -12,29 +12,28 @@ import './CSS/LocationTable.css';
 // it.
 const LocationTable = ({ locationData }) => {
   return (
-    <TableContainer class="formattedTable" component={Paper}>
-      <Table className="centeredTable" aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Location</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {locationData.map((row) => (
-            <TableRow
+    <div class="formattedTable" component={Paper}>
+      <table class="custom-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Location</th>
+    </tr>
+  </thead>
+  <tbody>
+     {locationData.map((row) => (
+            <tr
               key={row.name}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
+              <td >
                 {row.name}
-              </TableCell>
-              <TableCell align="right">{row.location}</TableCell>
-            </TableRow>
+              </td>
+              <td>{row.location}</td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+  </tbody>
+</table>
+    </div>
   );
 };
 

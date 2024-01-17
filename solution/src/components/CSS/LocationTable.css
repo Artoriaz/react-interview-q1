@@ -2,9 +2,29 @@
   display: flex;
   justify-content: center; /* Center horizontally */
 }
-.centeredTable {
+.custom-table {
   align-items: center;
   width: 50%; /* Adjust width as needed */
   max-width: 400px; /* Maximum width of the form */
   margin: auto; /* Auto margins for any additional centering */
+  border-collapse: collapse; /* Removes space between borders */
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid black; /* Borders for cells */
+  padding: 8px; /* Padding inside cells */
+  text-align: left; /* Align text to the left */
+}
+
+.custom-table thead {
+  background-color: #f2f2f2; /* Light grey background for header */
+}
+
+.custom-table tbody tr:nth-child(odd) {
+  background-color: #f9f9f9; /* Zebra striping for table rows */
+}
+
+.custom-table tbody tr:nth-child(even) {
+  background-color: #e7e7e7; /* Alternate color for zebra striping */
 }
